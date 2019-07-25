@@ -5,7 +5,7 @@ import os, sys, gc, argparse, numpy as np
 from torchvision.utils import save_image
 from torch.autograd import Variable
 from torchvision.utils import save_image
-
+from binascii import a2b_base64
 
 def get_opt():
     parser = argparse.ArgumentParser()
@@ -14,13 +14,25 @@ def get_opt():
     parser.add_argument("--simage", type=str, default='./', help='save image')
     opt = parser.parse_args()
     return opt
+def get_img():
+    cimg = open("./cimg.txt", "br")
+    eimg = open("./eimg.txt", "br")
+    binary_data = a2b_base64(cimg.read())
+    fd = open('cimg.jpg', 'wb')
+    fd.write(binary_data)
+    fd.close()
+    binary_data = a2b_base64(eimg.read())
+    fd = open('eimg.jpg', 'wb')
+    fd.write(binary_data)
+    fd.close()
+
 
 def get_res(opt):
     datalo = testdata()
     cimage = opt.cimage
     eimage = opt.eimage
     simage = opt.simage
-    
+    get_img()
     net = model(3,3)
     print("loading model")
     net.cpu()
